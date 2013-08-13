@@ -28,8 +28,7 @@ class SigninHandler(tornado.web.RequestHandler):
     def get(self):
         user = self.get_argument('user')
         passwd = self.get_argument('passwd')
-        userlist.addNewUser(user, passwd)
-        userlist.createfriendlist(user)
+        userlist.addNewUser(str(user), passwd)
         content = json.dumps(['OK'])
         self.write(content)
         print 'New : ' + user
@@ -69,13 +68,23 @@ class SendMessageHandler(tornado.web.RequestHandler):
             content = json.dumps([['OK']])
             self.write(content)
 
+class AddFriendHandler(tornado.web.RequestHandler):
+    def get(self):
+        user = self.get_argument('user')
+        passwd = self.get_argument('passwd')
+        friendsname = self.get_argument('friendsname')
+        if (userlist.checkUser(str(user), str(passwd)) == True):
+            userlist.addNewFriend(user, friendsname)
+            content = json.dumps(['OK'])
+            self.write(content)
+
 if __name__ == '__main__':
     tornado.options.parse_command_line()
     app = tornado.web.Application(handlers=[
         (r'/login', LoginHandler),
         (r'/signin', SigninHandler),
         (r'/friendlist', FriendlistHandler),
-#        (r'/addfriend', AddFriendHandler),
+        (r'/addfriend', AddFriendHandler),
         (r'/get', GetMessageHandler),
         (r'/send', SendMessageHandler)
     ])

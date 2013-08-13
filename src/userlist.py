@@ -11,13 +11,12 @@ class User(object):
             'long':{'wanzi':[['hello','wanzi']]},
             'wanzi':{'long':[['nihao','long']]}
         }
-
-    def createfriendlist(self, username):
-        self.friendlist[username] = []
-
+        
     def addNewUser(self, username, passwd):
         self.userlist[username] = passwd
-        self.friendlist[username] = []
+        self.friendlist[username] = ['long']
+        self.message[username] = {'long':[]}
+        self.message[username]['long'].append(['welcome to use MyChat.','long'])
         
     def checkUser(self, username, passwd):
         if username in self.userlist:
@@ -42,7 +41,6 @@ class User(object):
         if (From not in self.message[To]):
             self.message[To][From] = []
         self.message[To][From].append([message,From])
-        print 'receive: ' + str(self.message[From][To])
 
     def getMessageAll(self, username):
         message = self.message[username]
@@ -51,9 +49,7 @@ class User(object):
 
     def getMessage(self, username, friendsname):
         if friendsname not in self.message[username]:
-            print 'No message'
             return [[0]]
         message = self.message[username][friendsname]
         self.message[username].pop(friendsname)
-        print 'SEND: ' + str(message)
         return message
