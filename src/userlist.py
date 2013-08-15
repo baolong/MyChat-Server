@@ -1,9 +1,16 @@
 #!/usr/bin/env python
+#_*_ coding: utf-8
 
 class User(object):
     def __init__(self):
-        self.userlist = {'long':'123456','wanzi':'123456'}
-        self.friendlist = {'long':['wanzi'],
+        self.userlist = {
+           #'username' : 'passwd'
+            'long':'123456',
+            'wanzi':'123456'
+        }
+        self.friendlist = {
+           #'username' : ['friendsname']
+            'long':['wanzi'],
             'wanzi':['long'],
         }
         self.message = {
@@ -17,7 +24,7 @@ class User(object):
             self.userlist[username] = passwd
             self.friendlist[username] = ['long']
             self.message[username] = {'long':[]}
-            self.message[username]['long'].append(['welcome to use MyChat.','long'])
+            self.message[username]['long'].append(['欢迎使用MyChat聊天工具.','long'])
             return 0
         else:
             return -1

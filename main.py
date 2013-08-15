@@ -72,7 +72,7 @@ class AddFriendHandler(tornado.web.RequestHandler):
         friendsname = self.get_argument('friendsname')
         if (userlist.checkUser(str(user), str(passwd)) == True):
             if (False == userlist.addNewFriend(user, friendsname)):
-                raise tornado.web.HTTPError(400, reason='Friend is not exist')
+                raise tornado.web.HTTPError(400, reason='user is not exist')
 
 if __name__ == '__main__':
     tornado.options.parse_command_line()
