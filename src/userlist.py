@@ -36,11 +36,14 @@ class User(object):
         return False
 
     def addNewFriend(self, username, friendsname):
+        if username == friendsname:
+            return 1
         if (friendsname in self.userlist):
             self.friendlist[username].append(friendsname)
-            return True
+            self.friendlist[friendsname].append(username)
+            return 0
         else:
-            return False
+            return 2
 
     def getFriendlist(self, username):
         return self.friendlist[username]
@@ -56,7 +59,6 @@ class User(object):
         if (From not in self.message[To]):
             self.message[To][From] = []
         self.message[To][From].append([message,From])
-        print self.message
 
     def getMessageAll(self, username):
         message = self.message[username]

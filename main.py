@@ -15,9 +15,9 @@ userlist = User()
 
 class LoginHandler(tornado.web.RequestHandler):
     def get(self):
-        user = self.get_argument('user')
-        passwd = self.get_argument('passwd')
-        if (userlist.checkUser(str(user), str(passwd)) == True):
+        user = self.get_argument('user').encode('utf-8')
+        passwd = self.get_argument('passwd').encode('utf-8')
+        if (userlist.checkUser(user, passwd) == True):
             friendlist = userlist.getFriendlist(user)
             content = json.dumps(friendlist)
             self.write(content)
@@ -26,19 +26,19 @@ class LoginHandler(tornado.web.RequestHandler):
 
 class SigninHandler(tornado.web.RequestHandler):
     def get(self):
-        user = self.get_argument('user')
-        passwd = self.get_argument('passwd')
-        if (0 == userlist.addNewUser(str(user), passwd)):
+        user = self.get_argument('user').encode('utf-8')
+        passwd = self.get_argument('passwd').encode('utf-8')
+        if (0 == userlist.addNewUser(user, passwd)):
             raise tornado.web.HTTPError(200, reason='signin success')
         else:
             raise tornado.web.HTTPError(400, reason='username is exist.')
 
 class GetMessageHandler(tornado.web.RequestHandler):
     def get(self):
-        user = self.get_argument('user')
-        passwd = self.get_argument('passwd')
-        friend = self.get_argument('friend')
-        if (userlist.checkUser(str(user), str(passwd)) == True):
+        user = self.get_argument('user').encode('utf-8')
+        passwd = self.get_argument('passwd').encode('utf-8')
+        friend = self.get_argument('friend').encode('utf-8')
+        if (userlist.checkUser(user, passwd) == True):
             message = userlist.getMessage(user, friend)
             if (message[0][0] != 0):
                 content = json.dumps(message)
@@ -48,31 +48,34 @@ class GetMessageHandler(tornado.web.RequestHandler):
 
 class FriendlistHandler(tornado.web.RequestHandler):
     def get(self):
-        user = self.get_argument('user')
-        passwd = self.get_argument('passwd')
-        if (userlist.checkUser(str(user), str(passwd)) == True):
+        user = self.get_argument('user').encode('utf-8')
+        passwd = self.get_argument('passwd').encode('utf-8')
+        if (userlist.checkUser(user, passwd) == True):
             friendlist = userlist.getFriendlist(user)
             content = json.dumps(friendlist)
             self.write(content)
 
 class SendMessageHandler(tornado.web.RequestHandler):
     def get(self):
-        user = self.get_argument('user')
-        passwd = self.get_argument('passwd')
-        friend = self.get_argument('friend')
-        message = self.get_argument('message')
-        if (userlist.checkUser(str(user), str(passwd)) == True):
-            userlist.addMessage(str(friend), str(user), message.encode("utf-8"))
+        user = self.get_argument('user').encode('utf-8')
+        passwd = self.get_argument('passwd').encode('utf-8')
+        friend = self.get_argument('friend').encode('utf-8')
+        message = self.get_argument('message').encode('utf-8')
+        if (userlist.checkUser(user, passwd) == True):
+            userlist.addMessage(friend, user, message)
             raise tornado.web.HTTPError(200, 'send message success')
 
 class AddFriendHandler(tornado.web.RequestHandler):
     def get(self):
-        user = self.get_argument('user')
-        passwd = self.get_argument('passwd')
-        friendsname = self.get_argument('friendsname')
-        if (userlist.checkUser(str(user), str(passwd)) == True):
-            if (False == userlist.addNewFriend(user, friendsname)):
+        user = self.get_argument('user').encode('utf-8')
+        passwd = self.get_argument('passwd').encode('utf-8')
+        friendsname = self.get_argument('friendsname').encode('utf-8')
+        if (userlist.checkUser(user, passwd) == True):
+            err = userlist.addNewFriend(user, friendsname)
+            if (2 ==err):
                 raise tornado.web.HTTPError(400, reason='user is not exist')
+            if (1 == err):
+                raise tornado.web.HTTPError(400, reason='can not add yourself.')
 
 if __name__ == '__main__':
     tornado.options.parse_command_line()
